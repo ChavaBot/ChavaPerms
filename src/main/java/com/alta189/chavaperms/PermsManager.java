@@ -2,6 +2,7 @@ package com.alta189.chavaperms;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class PermsManager {
 		this.permsFolder = permsFolder;
 	}
 	
+	private InputStream getIS(String resource) throws IOException {
+		return PermsManager.class.getResource(resource).openStream();
+	}
+	
 	protected void load() throws IOException {
 		File accountFile = new File(permsFolder, "accounts.properties");
 		File permsFile = new File(permsFolder, "perms.properties");
@@ -34,11 +39,11 @@ public class PermsManager {
 		if (!inheritsFile.exists()) inheritsFile.createNewFile();
 		if (!groupsFile.exists()) groupsFile.createNewFile();
 		
-		accounts = new SettingsHandler(accountFile);
-		perms = new SettingsHandler(permsFile);
-		identify = new SettingsHandler(identifyFile);
-		inherits = new SettingsHandler(inheritsFile);
-		groupsSH = new SettingsHandler(groupsFile);
+		accounts = new SettingsHandler(getIS("accounts"),accountFile);
+		perms = new SettingsHandler(getIS("perms"),permsFile);
+		identify = new SettingsHandler(getIS("identify"),identifyFile);
+		inherits = new SettingsHandler(getIS("inherits"),inheritsFile);
+		groupsSH = new SettingsHandler(getIS("perms"),groupsFile);
 		
 		accounts.setCached(true);
 		perms.setCached(true);
@@ -148,7 +153,17 @@ public class PermsManager {
 						}
 					}
 				}
+				for (PermsGroup g : groups) {
+					if (g.getName().equalsIgnoreCase("default")) {
+						return g.hasPerm(perm);
+					}
+				}
 				return false;
+			}
+		}
+		for (PermsGroup g : groups) {
+			if (g.getName().equalsIgnoreCase("default")) {
+				return g.hasPerm(perm);
 			}
 		}
 		return false;
