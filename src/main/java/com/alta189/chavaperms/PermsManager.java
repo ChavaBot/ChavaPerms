@@ -3,8 +3,8 @@ package com.alta189.chavaperms;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.alta189.chavabot.util.SettingsHandler;
 
@@ -15,36 +15,42 @@ public class PermsManager {
 	private SettingsHandler inherits;
 	private SettingsHandler groupsSH;
 	private final File permsFolder;
-	private List<PermsUser> users = new ArrayList<PermsUser>();
-	private List<PermsGroup> groups = new ArrayList<PermsGroup>();
-	
+	private Map<String, PermsUser> users = new HashMap<String, PermsUser>();
+	private Map<String, PermsGroup> groups = new HashMap<String, PermsGroup>();
+	private Map<String, String> nicks = new HashMap<String, String>();
+
 	protected PermsManager(File permsFolder) {
 		this.permsFolder = permsFolder;
 	}
-	
+
 	private InputStream getIS(String resource) throws IOException {
 		return PermsManager.class.getResource(resource).openStream();
 	}
-	
+
 	protected void load() throws IOException {
 		File accountFile = new File(permsFolder, "accounts.properties");
 		File permsFile = new File(permsFolder, "perms.properties");
-		File identifyFile= new File(permsFolder, "identify.properties");
+		File identifyFile = new File(permsFolder, "identify.properties");
 		File inheritsFile = new File(permsFolder, "inherits.properties");
 		File groupsFile = new File(permsFolder, "groups.properties");
-		
-		if (!accountFile.exists()) accountFile.createNewFile();
-		if (!permsFile.exists()) permsFile.createNewFile();
-		if (!identifyFile.exists()) identifyFile.createNewFile();
-		if (!inheritsFile.exists()) inheritsFile.createNewFile();
-		if (!groupsFile.exists()) groupsFile.createNewFile();
-		
-		accounts = new SettingsHandler(getIS("accounts"),accountFile);
-		perms = new SettingsHandler(getIS("perms"),permsFile);
-		identify = new SettingsHandler(getIS("identify"),identifyFile);
-		inherits = new SettingsHandler(getIS("inherits"),inheritsFile);
-		groupsSH = new SettingsHandler(getIS("perms"),groupsFile);
-		
+
+		if (!accountFile.exists())
+			accountFile.createNewFile();
+		if (!permsFile.exists())
+			permsFile.createNewFile();
+		if (!identifyFile.exists())
+			identifyFile.createNewFile();
+		if (!inheritsFile.exists())
+			inheritsFile.createNewFile();
+		if (!groupsFile.exists())
+			groupsFile.createNewFile();
+
+		accounts = new SettingsHandler(getIS("accounts"), accountFile);
+		perms = new SettingsHandler(getIS("perms"), permsFile);
+		identify = new SettingsHandler(getIS("identify"), identifyFile);
+		inherits = new SettingsHandler(getIS("inherits"), inheritsFile);
+		groupsSH = new SettingsHandler(getIS("perms"), groupsFile);
+
 		accounts.setCached(true);
 		perms.setCached(true);
 		identify.setCached(true);
@@ -56,50 +62,50 @@ public class PermsManager {
 		identify.load();
 		inherits.load();
 		groupsSH.load();
-		
+
 		build();
 	}
-	
+
 	private void build() {
 		String groupRaw = null;
 		String hostname = null;
 		String permsRaw = null;
 		String pass = null;
-		
+
 		for (String account : accounts.getAsMap().keySet()) {
 			hostname = accounts.getPropertyString(account, null);
 			pass = identify.getPropertyString(account, null);
 			PermsUser user = new PermsUser(account, hostname, pass);
-			
+
 			if (inherits.checkProperty(account)) {
 				groupRaw = inherits.getPropertyString(account, "default");
 				for (String g : groupRaw.split(",")) {
 					user.addGroup(g);
 				}
 			}
-			
+
 			if (perms.checkProperty(account)) {
 				permsRaw = perms.getPropertyString(account, "default");
 				for (String p : permsRaw.split(",")) {
 					user.addPerm(p);
 				}
 			}
-			
-			users.add(user);
-			
+
+			users.put(account.toLowerCase(), user);
+
 			pass = null;
 			hostname = null;
 			groupRaw = null;
 		}
-		
+
 		for (String name : groupsSH.getAsMap().keySet()) {
 			PermsGroup group = new PermsGroup(name);
 			permsRaw = perms.getPropertyString(name, "none");
-			
+
 			for (String perm : permsRaw.split(",")) {
 				group.addPerm(perm);
 			}
-			groups.add(group);
+			groups.put(name.toLowerCase(), group);
 		}
 	}
 
@@ -109,63 +115,114 @@ public class PermsManager {
 		identify.reset();
 		inherits.reset();
 		groupsSH.reset();
-		
-		for (PermsUser user : users) {
+
+		for (String account : users.keySet()) {
+			PermsUser user = users.get(account);
 			accounts.put(user.getAccount(), user.getAccountHostname());
 			identify.put(user.getAccount(), user.getPass());
-			
+
 			StringBuilder gb = new StringBuilder();
 			for (String group : user.getGroups()) {
 				gb.append(group).append(",");
 			}
 			inherits.put(user.getAccount(), gb.toString());
-			
+
 			StringBuilder pb = new StringBuilder();
 			for (String perm : user.getPerms()) {
 				pb.append(perm).append(",");
 			}
 			perms.put(user.getAccount(), pb.toString());
 		}
-		
-		for (PermsGroup group : groups) {
+
+		for (String g : groups.keySet()) {
+			PermsGroup group = groups.get(g);
 			StringBuilder pb = new StringBuilder();
 			for (String perm : group.getPerms()) {
 				pb.append(perm).append(",");
 			}
 			perms.put(group.getName(), pb.toString());
 		}
-		
+
 	}
-	
+
 	public boolean hasPerms(String nick, String perm) {
-		for (PermsUser user : users) {
-			if (nick.equalsIgnoreCase(nick)) {
-				if (user.isIdentifed()) {
-					if (user.hasPerm(perm)) {
+		PermsUser user = users.get(nick.toLowerCase());
+		if (user == null) {
+			String alt = nicks.get(nick);
+			if (alt == null) {
+				if (groups.get("default") == null)
+					return true;
+				return groups.get("default").hasPerm(perm);
+			}
+			user = users.get(alt);
+			if (user == null) {
+				if (groups.get("default") == null)
+					return true;
+				return groups.get("default").hasPerm(perm);
+			}
+		}
+		if (user.isIdentifed()) {
+			if (user.hasPerm(perm)) {
+				return true;
+			} else {
+				for (String group : user.getGroups()) {
+					PermsGroup g = groups.get(group);
+					if (g != null && g.hasPerm(perm)) {
 						return true;
-					} else {
-						for (String group : user.getGroups()) {
-							for (PermsGroup g : groups) {
-								if (g.getName().equalsIgnoreCase(group)) {
-									return g.hasPerm(perm);
-								}
-							}
-						}
 					}
 				}
-				for (PermsGroup g : groups) {
-					if (g.getName().equalsIgnoreCase("default")) {
-						return g.hasPerm(perm);
-					}
-				}
-				return false;
 			}
 		}
-		for (PermsGroup g : groups) {
-			if (g.getName().equalsIgnoreCase("default")) {
-				return g.hasPerm(perm);
-			}
+
+		if (groups.get("default") == null)
+			return true;
+		return groups.get("default").hasPerm(perm);
+	}
+
+	public boolean hasAccount(String account) {
+		PermsUser user = users.get(account);
+		if (user == null) {
+			String alt = nicks.get(account);
+			if (alt == null) return false;
+			user = users.get(alt);
+			if (user == null) return false;
 		}
-		return false;
+		return (user != null);
+	}
+
+	public String getMappedAccount(String nick) {
+		return nicks.get(nick);
+	}
+
+	public void mapAccount(String nick, String account) {
+		nicks.put(nick.toLowerCase(), account);
+	}
+
+	public void addAccount(PermsUser account) {
+		users.put(account.getAccount(), account);
+	}
+
+	public boolean identify(String account, String pass) {
+		PermsUser user = users.get(account);
+		if (user == null) {
+			String alt = nicks.get(account);
+			if (alt == null) return false;
+			user = users.get(alt);
+			if (user == null) return false;
+		}
+		return user.identify(pass);		
+	}
+
+	public boolean hostIdentify(String account, String nick, String hostname) {
+		PermsUser user = users.get(account);
+		if (user == null) {
+			String alt = nicks.get(account);
+			if (alt == null) return false;
+			user = users.get(alt);
+			if (user == null) return false;
+		}
+		user.setHostname(hostname);
+		user.setNick(nick);
+		return user.isIdentifed();
 	}
 }
