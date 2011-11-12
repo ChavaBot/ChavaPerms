@@ -13,6 +13,7 @@ public class ChavaPerms extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		ChavaPerms.perms.flush();
 		ChavaPerms.perms = null;
 	}
 	
