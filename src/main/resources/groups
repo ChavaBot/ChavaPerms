@@ -1,0 +1,2 @@
+#This is the groups file, NOTE: Leave the default grous, but you can change the perms
+default: perms.identify,perms.changepass,perms.check
