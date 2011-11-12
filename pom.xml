@@ -4,8 +4,7 @@
   <artifactId>chavaperms</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>ChavaPerms</name>
-  <description>A simple permissions plugin for ChavaBot
-A simple permissions plugin for chavabot</description>
+  <description>A simple permissions plugin for ChavBot</description>
   <dependencies>
     <dependency>
       <groupId>com.alta189</groupId>
