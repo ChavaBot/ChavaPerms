@@ -28,7 +28,7 @@ A simple permissions plugin for chavabot</description>
                     <include>plugin.yml</include>
                 </includes>
             </resource>
-            <resource>com/alta189/defaults
+            <resource>
                 <targetPath>com/alta189/chavaperms</targetPath>
                 <filtering>false</filtering>
                 <directory>${basedir}/src/main/resources</directory>
