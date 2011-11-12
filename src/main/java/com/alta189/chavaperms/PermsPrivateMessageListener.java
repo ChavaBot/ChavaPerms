@@ -52,11 +52,13 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					return;
 				}
 				if (ChavaPerms.getPermsManager().identify(account, pass)) {
+					if (!account.equalsIgnoreCase(sender)) {
+						ChavaPerms.getPermsManager().mapAccount(sender, account);
+					}
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "You are now identified for " + account);
 				} else {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Unable to Identify you for " + account);					
 				}
-				
 			} else if (command.equalsIgnoreCase("add")) {
 				if (!tokens.hasMoreTokens() || tokens.countTokens() < 3) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. add <account> perm1 [perm2] [perm3]");

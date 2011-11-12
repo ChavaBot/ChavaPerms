@@ -209,6 +209,10 @@ public class PermsManager {
 		nicks.put(nick.toLowerCase(), account);
 	}
 
+	public void removeMap(String nick) {
+		nicks.remove(nick.toLowerCase());
+	}
+
 	public void addAccount(PermsUser account) {
 		users.put(account.getAccount(), account);
 	}
