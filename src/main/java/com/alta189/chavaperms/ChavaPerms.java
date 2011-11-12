@@ -1,5 +1,7 @@
 package com.alta189.chavaperms;
 
+import java.io.IOException;
+
 import com.alta189.chavabot.plugins.java.JavaPlugin;
 
 public class ChavaPerms extends JavaPlugin {
@@ -8,7 +10,12 @@ public class ChavaPerms extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		ChavaPerms.perms = new PermsManager(this.getDataFolder());
-		
+		try {
+			ChavaPerms.perms.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+			getPluginLoader().disablePlugin(this);
+		}
 	}
 
 	@Override
