@@ -33,7 +33,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 				user.addGroup("default");
 				user.addPerm("perms");
 				ChavaPerms.getPermsManager().addAccount(user);
-			} else if (command.equalsIgnoreCase("identify")){
+			} else if (command.equalsIgnoreCase("identify")) {
 				if (!tokens.hasMoreTokens()) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. identify [account] <pass>");
 					return;
@@ -57,6 +57,41 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Unable to Identify you for " + account);					
 				}
 				
+			} else if (command.equalsIgnoreCase("add")) {
+				if (!tokens.hasMoreTokens() || tokens.countTokens() < 3) {
+					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. add <account> perm1 [perm2] [perm3]");
+					return;
+				}
+				String account = tokens.nextToken();
+				if (!ChavaPerms.getPermsManager().hasAccount(account)) {
+					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid account.");					
+					return;
+				}
+				
+				while (tokens.hasMoreElements()) {
+					String perm = tokens.nextToken();
+					ChavaPerms.getPermsManager().getAccount(account).addPerm(perm);
+				}
+				
+			} else if (command.equalsIgnoreCase("rem")) {
+				if (!tokens.hasMoreTokens() || tokens.countTokens() < 3) {
+					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. rem <account> perm1 [perm2] [perm3]");
+					return;
+				}
+				String account = tokens.nextToken();
+				if (!ChavaPerms.getPermsManager().hasAccount(account)) {
+					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid account.");					
+					return;
+				}
+				
+				while (tokens.hasMoreElements()) {
+					String perm = tokens.nextToken();
+					ChavaPerms.getPermsManager().getAccount(account).removePerm(perm);
+				}
+				
+			} else {
+				ChavaManager.getInstance().getChavaBot().sendMessage(sender, "The commands are register, identify, add, and rem.");
+				return;
 			}
 		}
 	}

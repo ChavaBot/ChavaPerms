@@ -87,7 +87,7 @@ public class PermsManager {
 			if (perms.checkProperty(account)) {
 				permsRaw = perms.getPropertyString(account, "default");
 				for (String p : permsRaw.split(",")) {
-					user.addPerm(p);
+					user.addPerm(p.toLowerCase());
 				}
 			}
 
@@ -188,6 +188,17 @@ public class PermsManager {
 			if (user == null) return false;
 		}
 		return (user != null);
+	}
+	
+	public PermsUser getAccount(String account) {
+		PermsUser user = users.get(account);
+		if (user == null) {
+			String alt = nicks.get(account);
+			if (alt == null) return null;
+			user = users.get(alt);
+			if (user == null) return null;
+		}
+		return user;
 	}
 
 	public String getMappedAccount(String nick) {
