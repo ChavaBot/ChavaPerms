@@ -40,7 +40,7 @@ public class PermsUser {
 	}
 	
 	public boolean isIdentifed() {
-		return identified;
+		return (identified || (nick.equalsIgnoreCase(account) && hostname.equalsIgnoreCase(accountHostname)));
 	}
 	
 	public boolean identify(String pass) {
