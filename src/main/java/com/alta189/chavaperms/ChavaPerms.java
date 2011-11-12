@@ -2,6 +2,9 @@ package com.alta189.chavaperms;
 
 import java.io.IOException;
 
+import com.alta189.chavabot.events.Order;
+import com.alta189.chavabot.events.botevents.PrivateMessageEvent;
+import com.alta189.chavabot.events.userevents.NickChangeEvent;
 import com.alta189.chavabot.plugins.java.JavaPlugin;
 
 public class ChavaPerms extends JavaPlugin {
@@ -15,7 +18,10 @@ public class ChavaPerms extends JavaPlugin {
 		} catch (IOException e) {
 			e.printStackTrace();
 			getPluginLoader().disablePlugin(this);
+			return;
 		}
+		NickChangeEvent.register(new PermsNickChangeListener(), Order.Monitor, this);
+		PrivateMessageEvent.register(new PermsPrivateMessageListener(), Order.Monitor, this);
 	}
 
 	@Override
