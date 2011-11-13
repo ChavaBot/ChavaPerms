@@ -34,17 +34,6 @@ public class PermsManager {
 		File inheritsFile = new File(permsFolder, "inherits.properties");
 		File groupsFile = new File(permsFolder, "groups.properties");
 
-		if (!accountFile.exists())
-			accountFile.createNewFile();
-		if (!permsFile.exists())
-			permsFile.createNewFile();
-		if (!identifyFile.exists())
-			identifyFile.createNewFile();
-		if (!inheritsFile.exists())
-			inheritsFile.createNewFile();
-		if (!groupsFile.exists())
-			groupsFile.createNewFile();
-
 		accounts = new SettingsHandler(getIS("accounts"), accountFile);
 		perms = new SettingsHandler(getIS("perms"), permsFile);
 		identify = new SettingsHandler(getIS("identify"), identifyFile);
