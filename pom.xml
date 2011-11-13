@@ -32,7 +32,11 @@
                 <filtering>false</filtering>
                 <directory>${basedir}/src/main/resources</directory>
                 <includes>
-                    <include>*</include>
+                    <include>accounts</include>
+                    <include>groups</include>
+                    <include>identify</include>
+                    <include>inherits</include>
+                    <include>perms</include>
                 </includes>
             </resource>
         </resources>
