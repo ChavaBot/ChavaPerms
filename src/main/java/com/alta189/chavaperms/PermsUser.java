@@ -40,6 +40,9 @@ public class PermsUser {
 	}
 	
 	public boolean isIdentifed() {
+		if (nick == null || hostname == null) {
+			return identified;
+		}
 		return (identified || (nick.equalsIgnoreCase(account) && hostname.equalsIgnoreCase(accountHostname)));
 	}
 	
