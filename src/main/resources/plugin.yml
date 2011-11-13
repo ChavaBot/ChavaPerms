@@ -1,6 +1,6 @@
-name: ChavaNotify
+name: ChavaPerms
 version: ${build.number}
-description: Notifications on join
+description: Simple permissions plugin for ChavaBot
 author: alta189
 
-main: com.alta189.chavanotify.ChavaNotify
+main: com.alta189.chavaperms.ChavaPerms
