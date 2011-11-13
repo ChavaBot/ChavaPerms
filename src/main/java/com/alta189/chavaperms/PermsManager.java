@@ -21,6 +21,7 @@ public class PermsManager {
 
 	protected PermsManager(File permsFolder) {
 		this.permsFolder = permsFolder;
+		if (!permsFolder.exists()) permsFolder.mkdirs();
 	}
 
 	private InputStream getIS(String resource) throws IOException {
