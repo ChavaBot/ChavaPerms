@@ -10,7 +10,8 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 
 	public void onEvent(PrivateMessageEvent event) {
 		String sender = event.getSender().getNick();
-		StringTokenizer tokens = new StringTokenizer(event.getMessage());
+		if (!event.getMessage().startsWith(".perms ")) return;
+		StringTokenizer tokens = new StringTokenizer(event.getMessage().replaceFirst(".perms ", ""));
 		if (tokens.countTokens() < 2) {
 			if (tokens.nextToken().equalsIgnoreCase("help")) {
 				ChavaManager.getInstance().getChavaBot().sendMessage(sender, "The commands are register, identify, add, and rem.");
