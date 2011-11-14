@@ -60,6 +60,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Unable to Identify you for " + account);					
 				}
 			} else if (command.equalsIgnoreCase("add")) {
+				if (ChavaPerms.getPermsManager().hasPerms(sender, "perms.add"));
 				if (!tokens.hasMoreTokens() || tokens.countTokens() < 3) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. add <account> perm1 [perm2] [perm3]");
 					return;
@@ -76,6 +77,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 				}
 				
 			} else if (command.equalsIgnoreCase("rem")) {
+				if (ChavaPerms.getPermsManager().hasPerms(sender, "perms.rem"));
 				if (!tokens.hasMoreTokens() || tokens.countTokens() < 3) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. rem <account> perm1 [perm2] [perm3]");
 					return;
