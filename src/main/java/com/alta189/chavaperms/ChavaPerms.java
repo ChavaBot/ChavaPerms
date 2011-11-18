@@ -26,7 +26,11 @@ public class ChavaPerms extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		ChavaPerms.perms.flush();
+		try {
+			ChavaPerms.perms.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		ChavaPerms.perms = null;
 	}
 	
