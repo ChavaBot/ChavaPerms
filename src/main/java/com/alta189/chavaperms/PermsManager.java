@@ -149,13 +149,13 @@ public class PermsManager {
 			String alt = nicks.get(nick);
 			if (alt == null) {
 				if (groups.get("default") == null)
-					return true;
+					return false;
 				return groups.get("default").hasPerm(perm);
 			}
 			user = users.get(alt);
 			if (user == null) {
 				if (groups.get("default") == null)
-					return true;
+					return false;
 				return groups.get("default").hasPerm(perm);
 			}
 		}
