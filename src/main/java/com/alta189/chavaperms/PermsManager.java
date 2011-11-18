@@ -90,7 +90,7 @@ public class PermsManager {
 
 		for (String name : groupsSH.getAsMap().keySet()) {
 			PermsGroup group = new PermsGroup(name);
-			permsRaw = perms.getPropertyString(name, "none");
+			permsRaw = groupsSH.getPropertyString(name, "none");
 
 			for (String perm : permsRaw.split(",")) {
 				group.addPerm(perm);
@@ -138,7 +138,7 @@ public class PermsManager {
 			for (String perm : group.getPerms()) {
 				pb.append(perm).append(",");
 			}
-			perms.put(group.getName(), pb.toString());
+			groupsSH.put(group.getName(), pb.toString());
 		}
 
 	}
