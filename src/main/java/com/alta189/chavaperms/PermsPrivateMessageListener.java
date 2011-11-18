@@ -12,7 +12,8 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 		String sender = event.getSender().getNick();
 		if (!event.getMessage().startsWith(".perms ")) return;
 		StringTokenizer tokens = new StringTokenizer(event.getMessage().replaceFirst(".perms ", ""));
-		if (tokens.countTokens() < 2) {
+		int tokensCount = tokens.countTokens();
+		if (tokensCount < 2) {
 			if (tokens.nextToken().equalsIgnoreCase("help")) {
 				ChavaManager.getInstance().getChavaBot().sendMessage(sender, "The commands are register, identify, add, and rem.");
 				return;
@@ -41,7 +42,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 				}
 				String account = null;
 				String pass = null;
-				if (tokens.countTokens() == 3) {
+				if (tokensCount == 3) {
 					account = tokens.nextToken();
 					pass = tokens.nextToken();
 				} else {
@@ -62,7 +63,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 				}
 			} else if (command.equalsIgnoreCase("add")) {
 				if (ChavaPerms.getPermsManager().hasPerms(sender, "perms.add"));
-				if (!tokens.hasMoreTokens() || tokens.countTokens() < 3) {
+				if (!tokens.hasMoreTokens() || tokensCount < 3) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. add <account> perm1 [perm2] [perm3]");
 					return;
 				}
@@ -79,7 +80,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 				
 			} else if (command.equalsIgnoreCase("rem")) {
 				if (ChavaPerms.getPermsManager().hasPerms(sender, "perms.rem"));
-				if (!tokens.hasMoreTokens() || tokens.countTokens() < 3) {
+				if (!tokens.hasMoreTokens() || tokensCount < 3) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. rem <account> perm1 [perm2] [perm3]");
 					return;
 				}
