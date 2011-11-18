@@ -99,12 +99,12 @@ public class PermsManager {
 		}
 	}
 
-	protected void flush() {
-		accounts.reset();
-		perms.reset();
-		identify.reset();
-		inherits.reset();
-		groupsSH.reset();
+	protected void flush() throws IOException {
+		accounts.reset(getIS("accounts"));
+		perms.reset(getIS("perms"));
+		identify.reset(getIS("identify"));
+		inherits.reset(getIS("inherits"));
+		groupsSH.reset(getIS("perms"));
 
 		for (String account : users.keySet()) {
 			PermsUser user = users.get(account);
