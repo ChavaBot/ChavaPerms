@@ -16,11 +16,13 @@ public class PermsUser {
 	public PermsUser(String account, String accountHostname, String pass) {
 		this.account = account;
 		this.accountHostname = accountHostname;
+		this.pass = pass;
 	}
 	
 	public PermsUser(String account, String accountHostname, String pass, List<String> perms) {
 		this.account = account;
 		this.accountHostname = accountHostname;
+		this.pass = pass;
 		this.perms.addAll(perms);
 	}
 	
