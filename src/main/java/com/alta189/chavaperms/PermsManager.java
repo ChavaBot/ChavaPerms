@@ -112,14 +112,22 @@ public class PermsManager {
 			identify.put(user.getAccount(), user.getPass());
 
 			StringBuilder gb = new StringBuilder();
-			for (String group : user.getGroups()) {
-				gb.append(group).append(",");
+			if (user.getGroups() != null) {
+				for (String group : user.getGroups()) {
+					gb.append(group).append(",");
+				}
+			} else {
+				gb.append("");
 			}
 			inherits.put(user.getAccount(), gb.toString());
 
 			StringBuilder pb = new StringBuilder();
-			for (String perm : user.getPerms()) {
-				pb.append(perm).append(",");
+			if (user.getPerms() != null) {
+				for (String perm : user.getPerms()) {
+					pb.append(perm).append(",");
+				}
+			} else {
+				pb.append("");
 			}
 			perms.put(user.getAccount(), pb.toString());
 		}
