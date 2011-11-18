@@ -173,7 +173,7 @@ public class PermsManager {
 		}
 
 		if (groups.get("default") == null)
-			return true;
+			return false;
 		return groups.get("default").hasPerm(perm);
 	}
 
