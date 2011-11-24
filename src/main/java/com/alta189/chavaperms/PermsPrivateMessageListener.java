@@ -30,7 +30,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "You already have an account.");					
 					return;
 				}
-				String pass = tokens.nextToken();
+				String pass = Utils.getMD5Hash(tokens.nextToken());
 				PermsUser user = new PermsUser(sender, event.getSender().getHostname(), pass);
 				user.addGroup("default");
 				user.addPerm("perms");
@@ -49,6 +49,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					account = sender;
 					pass = tokens.nextToken();
 				}
+				pass = Utils.getMD5Hash(pass);
 				if (!ChavaPerms.getPermsManager().hasAccount(account)) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid account.");					
 					return;
