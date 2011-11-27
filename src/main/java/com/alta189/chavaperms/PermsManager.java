@@ -238,4 +238,16 @@ public class PermsManager {
 		user.setNick(nick);
 		return user.isIdentifed();
 	}
+	
+	public boolean isValidGroup(String group) {
+		return groups.containsKey(group.toLowerCase());
+	}
+	
+	public void addGroup(PermsGroup g) {
+		groups.put(g.getName().toLowerCase(), g);
+	}
+	
+	public PermsGroup getGroup(String group) {
+		return groups.get(group.toLowerCase());
+	}
 }
