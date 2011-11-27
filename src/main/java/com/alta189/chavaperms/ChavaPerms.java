@@ -22,10 +22,10 @@ public class ChavaPerms extends JavaPlugin {
 			getPluginLoader().disablePlugin(this);
 			return;
 		}
-		NickChangeEvent.register(new PermsNickChangeListener(), Order.Monitor, this);
-		PrivateMessageEvent.register(new PermsPrivateMessageListener(), Order.Monitor, this);
-		MessageEvent.register(new ChannelMessageListener(), Order.Monitor, this);
-		ChannelJoinEvent.register(new ChannelJoinListener(), Order.Monitor, this);
+		NickChangeEvent.register(new PermsNickChangeListener(), Order.Earlist, this);
+		PrivateMessageEvent.register(new PermsPrivateMessageListener(), Order.Default, this);
+		MessageEvent.register(new ChannelMessageListener(), Order.Earlist, this);
+		ChannelJoinEvent.register(new ChannelJoinListener(), Order.Earlist, this);
 	}
 
 	@Override
