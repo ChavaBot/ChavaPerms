@@ -222,8 +222,13 @@ public class PermsManager {
 			if (alt == null) return false;
 			user = users.get(alt);
 			if (user == null) return false;
+			return user.identify(pass);		
 		}
-		return user.identify(pass);		
+		if (user.identify(pass)) {
+			mapAccount(account, account);
+		}
+		
+		return false;
 	}
 
 	public boolean hostIdentify(String account, String nick, String hostname) {
@@ -233,10 +238,16 @@ public class PermsManager {
 			if (alt == null) return false;
 			user = users.get(alt);
 			if (user == null) return false;
+			user.setHostname(hostname);
+			user.setNick(nick);
+			return user.isIdentifed();
 		}
 		user.setHostname(hostname);
 		user.setNick(nick);
-		return user.isIdentifed();
+		if (user.isIdentifed()) {
+			mapAccount(account, nick);
+		}
+		return false;
 	}
 	
 	public boolean isValidGroup(String group) {

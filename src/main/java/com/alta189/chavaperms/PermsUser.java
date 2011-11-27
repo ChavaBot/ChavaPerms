@@ -45,7 +45,7 @@ public class PermsUser {
 		if (nick == null || hostname == null) {
 			return identified;
 		}
-		return (identified || (nick.equalsIgnoreCase(account) && hostname.equalsIgnoreCase(accountHostname)));
+		return (identified || (nick.equalsIgnoreCase(account) && hostname.equalsIgnoreCase(accountHostname)) || ((ChavaPerms.getPermsManager().getMappedAccount(nick) != null) && (ChavaPerms.getPermsManager().getMappedAccount(nick).equalsIgnoreCase(account) && hostname.equalsIgnoreCase(accountHostname))));
 	}
 	
 	public boolean identify(String pass) {
