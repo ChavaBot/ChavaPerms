@@ -9,7 +9,7 @@ public class PermsNickChangeListener implements Listener<NickChangeEvent> {
 		String mapped = ChavaPerms.getPermsManager().getMappedAccount(event.getOldNick().toLowerCase());
 		if (mapped != null) {
 			ChavaPerms.getPermsManager().removeMap(event.getOldNick().toLowerCase());
-			ChavaPerms.getPermsManager().mapAccount(event.getNewNick().toLowerCase(), mapped);
+			ChavaPerms.getPermsManager().mapAccount(mapped, event.getNewNick().toLowerCase());
 		}
 	}
 
