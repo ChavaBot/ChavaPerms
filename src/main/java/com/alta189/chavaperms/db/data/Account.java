@@ -19,6 +19,9 @@ public class Account {
 	private String account;
 	
 	@NotNull
+	private String hostname;
+	
+	@NotNull
 	private String password;
 	
 	@NotNull
@@ -76,6 +79,14 @@ public class Account {
 
 	public void setIdentified(boolean identified) {
 		this.identified = identified;
+	}
+
+	public String getHostname() {
+		return hostname;
+	}
+
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
 	}
 	
 	
