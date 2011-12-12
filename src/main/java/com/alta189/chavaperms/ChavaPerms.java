@@ -1,5 +1,6 @@
 package com.alta189.chavaperms;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.alta189.chavabot.events.Order;
@@ -10,13 +11,15 @@ import com.alta189.chavabot.events.userevents.NickChangeEvent;
 import com.alta189.chavabot.plugins.java.JavaPlugin;
 
 public class ChavaPerms extends JavaPlugin {
-	private static PermsManager perms = null;
+	private static ChavaPerms instance = null;
+	private PermsManager perms = null;
 		
 	@Override
 	public void onEnable() {
-		ChavaPerms.perms = new PermsManager(this.getDataFolder());
+		ChavaPerms.instance = this;
+		perms = new PermsManager(this.getDataFolder());
 		try {
-			ChavaPerms.perms.load();
+			perms.load();
 		} catch (IOException e) {
 			e.printStackTrace();
 			getPluginLoader().disablePlugin(this);
@@ -31,15 +34,19 @@ public class ChavaPerms extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		try {
-			ChavaPerms.perms.flush();
+			perms.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		ChavaPerms.perms = null;
+		perms = null;
 	}
 	
 	public static PermsManager getPermsManager() {
-		return perms;
+		return instance.perms;
+	}
+	
+	public static File getFolder() {
+		return instance.getDataFolder();
 	}
 
 }
