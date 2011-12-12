@@ -3,6 +3,7 @@ package com.alta189.chavaperms;
 import com.alta189.chavaperms.db.DatabaseHandler;
 import com.alta189.chavaperms.db.data.Account;
 import com.alta189.chavaperms.db.data.Group;
+import com.alta189.chavaperms.db.data.WhitelistedAccount;
 
 public class PermsManager {
 	DatabaseHandler handler = new DatabaseHandler();
@@ -63,5 +64,13 @@ public class PermsManager {
 	
 	public void addGroup(Group group) {
 		handler.addGroup(group);
+	}
+	
+	public WhitelistedAccount getWhitelistedAccount(String name) {
+		return handler.getWhitelistedAccount(name);
+	}
+	
+	public void saveWhitelistedAccount(WhitelistedAccount account) {
+		handler.saveWhitelistedAccount(account);
 	}
 }

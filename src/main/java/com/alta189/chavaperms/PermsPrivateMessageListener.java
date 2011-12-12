@@ -7,6 +7,7 @@ import com.alta189.chavabot.events.Listener;
 import com.alta189.chavabot.events.botevents.PrivateMessageEvent;
 import com.alta189.chavaperms.db.data.Account;
 import com.alta189.chavaperms.db.data.Group;
+import com.alta189.chavaperms.db.data.WhitelistedAccount;
 
 public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent> {
 
@@ -36,11 +37,40 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 				String pass = Utils.getMD5Hash(tokens.nextToken());
 				Account user = new Account();
 				user.setAccount(sender.toLowerCase());
-				user.setHostname(event.getSender().getHostname());
-				user.setPassword(pass);
+				user.setHostname(event.getSender().getHostname().toLowerCase());
+				user.setPassword(pass.toLowerCase());
 				user.addGroup("default");
 				user.addPerm("perms");
 				ChavaPerms.getPermsManager().addAccount(user);
+			} else if (command.equalsIgnoreCase("group")) {
+				if (!tokens.hasMoreTokens() || tokensCount != 3) {
+					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. group account <pass>");
+					return;
+				}
+				if (ChavaPerms.getPermsManager().hasAccount(sender)) {
+					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "You already are mapped to an account.");
+					return;
+				}
+				
+				String name = tokens.nextToken().toLowerCase();
+				String pass = Utils.getMD5Hash(tokens.nextToken());
+				WhitelistedAccount wa = ChavaPerms.getPermsManager().getWhitelistedAccount(sender);
+				if (wa != null) {
+					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "You already are mapped to an account, but we can't link it to a valid account.");
+					return;					
+				}
+				
+				Account account = ChavaPerms.getPermsManager().getAccount(name);
+				if (account == null) {
+					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid account.");
+					return;					
+				}
+				
+				wa = new WhitelistedAccount();
+				wa.setAccount(name);
+				wa.setName(sender);
+				wa.setHostname(event.getSender().getHostname());
+				ChavaPerms.getPermsManager().saveWhitelistedAccount(wa);
 			} else if (command.equalsIgnoreCase("add")) {
 				if (ChavaPerms.getPermsManager().hasPerms(sender, "perms.add")) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "You don't have permission");
@@ -57,8 +87,8 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 				}
 
 				while (tokens.hasMoreElements()) {
-					String perm = tokens.nextToken();
-					ChavaPerms.getPermsManager().getAccount(account).addPerm(perm);
+					String perm = tokens.nextToken().toLowerCase();
+					ChavaPerms.getPermsManager().getAccount(account).addPerm(perm.toLowerCase());
 				}
 
 			} else if (command.equalsIgnoreCase("rem")) {
@@ -77,7 +107,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 				}
 
 				while (tokens.hasMoreElements()) {
-					String perm = tokens.nextToken();
+					String perm = tokens.nextToken().toLowerCase();
 					ChavaPerms.getPermsManager().getAccount(account).remPerm(perm);
 				}
 
@@ -117,7 +147,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 				}
 
 				while (tokens.hasMoreElements()) {
-					String group = tokens.nextToken();
+					String group = tokens.nextToken().toLowerCase();
 					ChavaPerms.getPermsManager().getAccount(account).remGroup(group);
 				}
 			} else if (command.equalsIgnoreCase("gpadd")) {
@@ -148,14 +178,14 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. gprem <group> perm1 [perm2] [perm3]");
 					return;
 				}
-				String group = tokens.nextToken();
+				String group = tokens.nextToken().toLowerCase();
 				if (!ChavaPerms.getPermsManager().validGroup(group)) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid group.");
 					return;
 				}
 
 				while (tokens.hasMoreElements()) {
-					String perm = tokens.nextToken();
+					String perm = tokens.nextToken().toLowerCase();
 					ChavaPerms.getPermsManager().getGroup(group).remPerm(perm);
 				}
 			} else if (command.equalsIgnoreCase("ngroup")) {
@@ -173,7 +203,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					return;
 				}
 				Group pg = new Group();
-				pg.setGroup(group);
+				pg.setGroup(group.toLowerCase());
 				pg.addPerm("perm");
 				ChavaPerms.getPermsManager().addGroup(pg);
 			} else if (command.equalsIgnoreCase("hasperm")) {
@@ -190,7 +220,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid account.");
 					return;
 				}
-				String perm = tokens.nextToken();
+				String perm = tokens.nextToken().toLowerCase();
 				if (ChavaPerms.getPermsManager().hasPerms(account, perm)) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, new StringBuilder().append("Account '").append(account).append("' does have perm '").append(perm).append("'").toString());
 				} else {

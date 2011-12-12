@@ -113,6 +113,14 @@ public class DatabaseHandler {
 		return getAccount(name) != null;
 	}
 	
+	public void saveWhitelistedAccount(WhitelistedAccount account) {
+		ebean.save(account);
+	}
+	
+	public void remWhitelistedAccount(WhitelistedAccount account) {
+		ebean.delete(account);
+	}
+	
 	public Group getGroup(String name) {
 		name = name.toLowerCase();
 		return ebean.find(Group.class).where().ieq("group", name).findUnique();
