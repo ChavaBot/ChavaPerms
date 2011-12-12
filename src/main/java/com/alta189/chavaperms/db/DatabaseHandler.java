@@ -53,4 +53,68 @@ public class DatabaseHandler {
 	public EbeanServer getDatabase() {
 		return ebean;
 	}
+	
+	private Account getAccountNoWhitelist(String name) {
+		return ebean.find(Account.class).where().ieq("account", name).findUnique();
+	}
+	
+	public WhitelistedAccount getWhitelistedAccount(String name) {
+		return ebean.find(WhitelistedAccount.class).where().ieq("name", name).findUnique();
+	}
+	
+	public Account getAccount(String name) {
+		name = name.toLowerCase();
+		Account result = getAccountNoWhitelist(name);
+		if (result == null) {
+			WhitelistedAccount account = getWhitelistedAccount(name);
+			if (account != null) {
+				result = ebean.find(Account.class).where().ieq("account", account.getAccount()).findUnique();
+			}
+		}
+		return result;
+	}
+	
+	public boolean identify(String nick, String hostname) {
+		nick = nick.toLowerCase();
+		hostname = hostname.toLowerCase();
+		Account account = getAccountNoWhitelist(nick);
+		if (account != null) {
+			return account.getHostname().equals(hostname);
+		}
+		WhitelistedAccount wa = getWhitelistedAccount(nick);
+		if (wa != null) {
+			account = getAccountNoWhitelist(wa.getAccount());
+			return (account != null) && wa.getHostname().equals(hostname);
+		}
+		return false;
+	}
+	
+	public void saveAccount(Account account) {
+		ebean.save(account);
+	}
+	
+	public void remAccount(Account account) {
+		ebean.delete(account);
+	}
+	
+	public boolean hasAccount(String name) {
+		return getAccount(name) != null;
+	}
+	
+	public Group getGroup(String name) {
+		name = name.toLowerCase();
+		return ebean.find(Group.class).where().ieq("group", name).findUnique();
+	}
+	
+	public boolean validGroup(String name) {
+		return getGroup(name) != null;
+	}
+	
+	public void addGroup(Group group) {
+		ebean.save(group);
+	}
+	
+	public void remGroup(Group group) {
+		ebean.delete(group);
+	}
 }
