@@ -9,17 +9,14 @@ import javax.persistence.Table;
 import com.avaje.ebean.validation.NotNull;
 
 @Entity()
-@Table(name = "permsuser")
-public class PermsUser {
+@Table(name = "accounts")
+public class Account {
 	
 	@Id
 	private int id;
 	
 	@NotNull
 	private String account;
-	
-	@NotNull
-	private List<String> whitelist;
 	
 	@NotNull
 	private String password;
@@ -47,14 +44,6 @@ public class PermsUser {
 
 	public void setAccount(String account) {
 		this.account = account;
-	}
-
-	public List<String> getWhitelist() {
-		return whitelist;
-	}
-
-	public void setWhitelist(List<String> whitelist) {
-		this.whitelist = whitelist;
 	}
 
 	public String getPassword() {

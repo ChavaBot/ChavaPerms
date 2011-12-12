@@ -194,7 +194,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "This group already exists.");
 					return;
 				}
-				PermsGroup pg = new PermsGroup(group);
+				Group pg = new Group(group);
 				ChavaPerms.getPermsManager().addGroup(pg);
 			} else if (command.equalsIgnoreCase("hasperm")) {
 				if (!ChavaPerms.getPermsManager().hasPerms(sender, "perms.hasperm")) {

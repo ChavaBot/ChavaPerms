@@ -10,7 +10,7 @@ import com.avaje.ebean.validation.NotNull;
 
 @Entity()
 @Table(name = "permsgroup")
-public class PermsGroup {
+public class Group {
 	@Id
 	private int id;
 

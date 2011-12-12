@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alta189.chavaperms.ChavaPerms;
-import com.alta189.chavaperms.db.data.PermsGroup;
-import com.alta189.chavaperms.db.data.PermsUser;
+import com.alta189.chavaperms.db.data.Account;
+import com.alta189.chavaperms.db.data.Group;
+import com.alta189.chavaperms.db.data.WhitelistedAccount;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.config.DataSourceConfig;
@@ -43,8 +44,9 @@ public class DatabaseHandler {
 
 	private List<Class<?>> getDataClasses() {
 		List<Class<?>> list = new ArrayList<Class<?>>();
-		list.add(PermsUser.class);
-		list.add(PermsGroup.class);
+		list.add(Account.class);
+		list.add(Group.class);
+		list.add(WhitelistedAccount.class);
 		return list;
 	}
 
