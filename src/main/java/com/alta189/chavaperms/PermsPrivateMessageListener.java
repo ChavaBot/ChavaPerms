@@ -5,6 +5,8 @@ import java.util.StringTokenizer;
 import com.alta189.chavabot.ChavaManager;
 import com.alta189.chavabot.events.Listener;
 import com.alta189.chavabot.events.botevents.PrivateMessageEvent;
+import com.alta189.chavaperms.db.data.Account;
+import com.alta189.chavaperms.db.data.Group;
 
 public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent> {
 
@@ -32,37 +34,13 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					return;
 				}
 				String pass = Utils.getMD5Hash(tokens.nextToken());
-				PermsUser user = new PermsUser(sender, event.getSender().getHostname(), pass);
+				Account user = new Account();
+				user.setAccount(sender.toLowerCase());
+				user.setHostname(event.getSender().getHostname());
+				user.setPassword(pass);
 				user.addGroup("default");
 				user.addPerm("perms");
 				ChavaPerms.getPermsManager().addAccount(user);
-			} else if (command.equalsIgnoreCase("identify")) {
-				if (!tokens.hasMoreTokens()) {
-					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. identify [account] <pass>");
-					return;
-				}
-				String account = null;
-				String pass = null;
-				if (tokensCount == 3) {
-					account = tokens.nextToken();
-					pass = tokens.nextToken();
-				} else {
-					account = sender;
-					pass = tokens.nextToken();
-				}
-				pass = Utils.getMD5Hash(pass);
-				if (!ChavaPerms.getPermsManager().hasAccount(account)) {
-					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid account.");
-					return;
-				}
-				if (ChavaPerms.getPermsManager().identify(account, pass)) {
-					if (!account.equalsIgnoreCase(sender)) {
-						ChavaPerms.getPermsManager().mapAccount(sender, account);
-					}
-					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "You are now identified for " + account);
-				} else {
-					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Unable to Identify you for " + account);
-				}
 			} else if (command.equalsIgnoreCase("add")) {
 				if (ChavaPerms.getPermsManager().hasPerms(sender, "perms.add")) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "You don't have permission");
@@ -100,7 +78,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 
 				while (tokens.hasMoreElements()) {
 					String perm = tokens.nextToken();
-					ChavaPerms.getPermsManager().getAccount(account).removePerm(perm);
+					ChavaPerms.getPermsManager().getAccount(account).remPerm(perm);
 				}
 
 			} else if (command.equalsIgnoreCase("gadd")) {
@@ -140,7 +118,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 
 				while (tokens.hasMoreElements()) {
 					String group = tokens.nextToken();
-					ChavaPerms.getPermsManager().getAccount(account).removeGroup(group);
+					ChavaPerms.getPermsManager().getAccount(account).remGroup(group);
 				}
 			} else if (command.equalsIgnoreCase("gpadd")) {
 				if (!ChavaPerms.getPermsManager().hasPerms(sender, "perms.gpadd")) {
@@ -152,7 +130,7 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					return;
 				}
 				String group = tokens.nextToken();
-				if (!ChavaPerms.getPermsManager().isValidGroup(group)) {
+				if (!ChavaPerms.getPermsManager().validGroup(group)) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid group.");
 					return;
 				}
@@ -171,14 +149,14 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					return;
 				}
 				String group = tokens.nextToken();
-				if (!ChavaPerms.getPermsManager().isValidGroup(group)) {
+				if (!ChavaPerms.getPermsManager().validGroup(group)) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid group.");
 					return;
 				}
 
 				while (tokens.hasMoreElements()) {
 					String perm = tokens.nextToken();
-					ChavaPerms.getPermsManager().getGroup(group).removePerm(perm);
+					ChavaPerms.getPermsManager().getGroup(group).remPerm(perm);
 				}
 			} else if (command.equalsIgnoreCase("ngroup")) {
 				if (!ChavaPerms.getPermsManager().hasPerms(sender, "perms.ngroup")) {
@@ -190,11 +168,13 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					return;
 				}
 				String group = tokens.nextToken();
-				if (ChavaPerms.getPermsManager().isValidGroup(group)) {
+				if (ChavaPerms.getPermsManager().validGroup(group)) {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "This group already exists.");
 					return;
 				}
-				Group pg = new Group(group);
+				Group pg = new Group();
+				pg.setGroup(group);
+				pg.addPerm("perm");
 				ChavaPerms.getPermsManager().addGroup(pg);
 			} else if (command.equalsIgnoreCase("hasperm")) {
 				if (!ChavaPerms.getPermsManager().hasPerms(sender, "perms.hasperm")) {
@@ -231,24 +211,8 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 				} else {
 					ChavaManager.getInstance().getChavaBot().sendMessage(sender, new StringBuilder().append("Account '").append(account).append("' does not exist").toString());
 				}
-			} else if (command.equalsIgnoreCase("maccount")) {
-				if (!ChavaPerms.getPermsManager().hasPerms(sender, "perms.maccount")) {
-					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "You don't have permission");
-					return;
-				}
-				if (!tokens.hasMoreTokens() || tokensCount != 2) {
-					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Invalid syntax. maccount <nick>");
-					return;
-				}
-				String nick = tokens.nextToken();
-				String mapped = ChavaPerms.getPermsManager().getMappedAccount(nick);
-				if (mapped == null) {
-					ChavaManager.getInstance().getChavaBot().sendMessage(sender, new StringBuilder().append("Nick '").append(nick).append("' is not mapped to an account").toString());
-				} else {
-					ChavaManager.getInstance().getChavaBot().sendMessage(sender, new StringBuilder().append("Nick '").append(nick).append("' is  mapped to Account '").append(mapped).append("'").toString());					
-				}
 			} else {
-				ChavaManager.getInstance().getChavaBot().sendMessage(sender, "The commands are register, identify, gadd, grem, gpadd, gprem, ngroup, add, hasperm, hasaccount, maccount, and rem.");
+				ChavaManager.getInstance().getChavaBot().sendMessage(sender, "The commands are register, identify, gadd, grem, gpadd, gprem, ngroup, add, hasperm, hasaccount, and rem.");
 				return;
 			}
 		}

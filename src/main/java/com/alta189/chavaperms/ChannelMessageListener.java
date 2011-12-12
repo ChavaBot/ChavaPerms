@@ -6,7 +6,7 @@ import com.alta189.chavabot.events.channelevents.MessageEvent;
 public class ChannelMessageListener implements Listener<MessageEvent> {
 
 	public void onEvent(MessageEvent event) {
-		ChavaPerms.getPermsManager().hostIdentify(event.getUser().getNick(), event.getUser().getNick(), event.getUser().getHostname());
+		ChavaPerms.getPermsManager().identify(event.getUser().getNick(), event.getUser().getNick());
 	}
 
 }

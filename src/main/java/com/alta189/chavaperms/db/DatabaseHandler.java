@@ -79,12 +79,24 @@ public class DatabaseHandler {
 		hostname = hostname.toLowerCase();
 		Account account = getAccountNoWhitelist(nick);
 		if (account != null) {
-			return account.getHostname().equals(hostname);
+			if (account.getHostname().equals(hostname)) {
+				account.setIdentified(true);
+			} else {
+				account.setIdentified(false);
+			}
+			ebean.save(account);
 		}
 		WhitelistedAccount wa = getWhitelistedAccount(nick);
 		if (wa != null) {
 			account = getAccountNoWhitelist(wa.getAccount());
-			return (account != null) && wa.getHostname().equals(hostname);
+			if (account != null) {
+				if (wa.getHostname().equals(hostname)) {
+					account.setIdentified(true);
+				} else {
+					account.setIdentified(false);
+				}
+				ebean.save(account);
+			}
 		}
 		return false;
 	}

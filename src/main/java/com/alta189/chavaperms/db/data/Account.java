@@ -89,5 +89,33 @@ public class Account {
 		this.hostname = hostname;
 	}
 	
+	public boolean hasPerm(String perm) {
+		perm = perm.toLowerCase();
+		return perms.contains(perm);
+	}
 	
+	public void addPerm(String perm) {
+		perm = perm.toLowerCase();
+		perms.add(perm);
+	}
+	
+	public void remPerm(String perm) {
+		perm = perm.toLowerCase();
+		perms.remove(perm);
+	}
+	
+	public boolean inGroup(String group) {
+		group = group.toLowerCase();
+		return groups.contains(group);
+	}
+	
+	public void addGroup(String group) {
+		group = group.toLowerCase();
+		groups.add(group);
+	}
+	
+	public void remGroup(String group) {
+		group = group.toLowerCase();
+		groups.remove(group);
+	}
 }

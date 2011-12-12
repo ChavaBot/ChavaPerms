@@ -54,5 +54,20 @@ public class Group {
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
 	}
+	
+	public boolean hasPerm(String perm) {
+		perm = perm.toLowerCase();
+		return perms.contains(perm);
+	}
+	
+	public void addPerm(String perm) {
+		perm = perm.toLowerCase();
+		perms.add(perm);
+	}
+	
+	public void remPerm(String perm) {
+		perm = perm.toLowerCase();
+		perms.remove(perm);
+	}
 
 }
