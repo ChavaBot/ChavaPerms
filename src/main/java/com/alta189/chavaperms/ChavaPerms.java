@@ -24,6 +24,7 @@ public class ChavaPerms extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		perms.disable();
 		perms = null;
 	}
 	

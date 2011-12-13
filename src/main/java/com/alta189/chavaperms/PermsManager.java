@@ -73,4 +73,13 @@ public class PermsManager {
 	public void saveWhitelistedAccount(WhitelistedAccount account) {
 		handler.saveWhitelistedAccount(account);
 	}
+	
+	public void disable() {
+		for (Account a : handler.getDatabase().find(Account.class).findSet()) {
+			if (a.isIdentified()) {
+				a.setIdentified(false);
+				handler.saveAccount(a);
+			}
+		}
+	}
 }
