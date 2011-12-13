@@ -66,6 +66,12 @@ public class PermsPrivateMessageListener implements Listener<PrivateMessageEvent
 					return;					
 				}
 				
+				if (!account.getPassword().equalsIgnoreCase(pass)) {
+					ChavaManager.getInstance().getChavaBot().sendMessage(sender, "Incorrect Password.");
+					return;
+				}
+				
+				
 				wa = new WhitelistedAccount();
 				wa.setAccount(name);
 				wa.setName(sender);
