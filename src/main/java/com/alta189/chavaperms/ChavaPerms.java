@@ -1,14 +1,9 @@
 package com.alta189.chavaperms;
 
-import java.io.File;
+import com.alta189.chavabot.ChavaManager;
+import com.alta189.chavabot.plugin.CommonPlugin;
 
-import com.alta189.chavabot.events.Order;
-import com.alta189.chavabot.events.botevents.PrivateMessageEvent;
-import com.alta189.chavabot.events.channelevents.ChannelJoinEvent;
-import com.alta189.chavabot.events.channelevents.MessageEvent;
-import com.alta189.chavabot.plugins.java.JavaPlugin;
-
-public class ChavaPerms extends JavaPlugin {
+public class ChavaPerms extends CommonPlugin {
 	private static ChavaPerms instance = null;
 	private PermsManager perms = null;
 		
@@ -17,9 +12,7 @@ public class ChavaPerms extends JavaPlugin {
 		ChavaPerms.instance = this;
 		perms = new PermsManager();
 		perms.setup();
-		PrivateMessageEvent.register(new PermsPrivateMessageListener(), Order.Default, this);
-		MessageEvent.register(new ChannelMessageListener(), Order.Earlist, this);
-		ChannelJoinEvent.register(new ChannelJoinListener(), Order.Earlist, this);
+		ChavaManager.getListenerManager().addListener(new PermListener());
 	}
 
 	@Override
@@ -28,12 +21,12 @@ public class ChavaPerms extends JavaPlugin {
 		perms = null;
 	}
 	
-	public static PermsManager getPermsManager() {
-		return instance.perms;
+	public static ChavaPerms getInstance() {
+		return instance;
 	}
 	
-	public static File getFolder() {
-		return instance.getDataFolder();
+	public static PermsManager getPermsManager() {
+		return instance.perms;
 	}
 
 }

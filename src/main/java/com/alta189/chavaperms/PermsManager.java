@@ -1,15 +1,16 @@
 package com.alta189.chavaperms;
 
+import com.alta189.chavabot.plugin.CommonPlugin;
 import com.alta189.chavaperms.db.DatabaseHandler;
 import com.alta189.chavaperms.db.data.Account;
 import com.alta189.chavaperms.db.data.Group;
 import com.alta189.chavaperms.db.data.WhitelistedAccount;
 
 public class PermsManager {
-	DatabaseHandler handler = new DatabaseHandler();
+	DatabaseHandler handler = new DatabaseHandler((CommonPlugin)ChavaPerms.getInstance());
 	
 	public void setup() {
-		ChavaPerms.getFolder().mkdirs();
+		ChavaPerms.getInstance().getDataFolder().mkdirs();
 		handler.setup();
 	}
 	
